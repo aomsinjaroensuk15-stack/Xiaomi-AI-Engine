@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xiaomi AI - Vision Edition</title>
+    <style>
+        /* สไตล์ Black & Diamond */
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 400px;
+            padding: 20px;
+            border: 2px solid #b9f2ff; /* สีเพชร */
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(185, 242, 255, 0.2);
+            background: linear-gradient(145deg, #1a1a1a, #000);
+        }
+        h2 { text-align: center; color: #b9f2ff; text-transform: uppercase; }
+        #chat-box {
+            height: 300px;
+            overflow-y: auto;
+            border-bottom: 1px solid #333;
+            margin-bottom: 15px;
+            padding: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #222;
+            border: 1px solid #b9f2ff;
+            color: #fff;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            background: #b9f2ff;
+            color: #000;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Xiaomi AI</h2>
+    <div id="chat-box"></div>
+    <input type="text" id="userInput" placeholder="พิมพ์คำสั่งที่นี่...">
+    <button onclick="askAI()">ส่งคำสั่ง</button>
+</div>
+
+<script>
+    async function askAI() {
+        const input = document.getElementById('userInput').value;
+        const chatBox = document.getElementById('chat-box');
+        
+        if(!input) return;
+
+        chatBox.innerHTML += `<p><b>คุณ:</b> ${input}</p>`;
+        
+        // ตรงนี้คือจุดเชื่อม API (แต่เราจะยังไม่ใส่ Key ลงไปใน Code ตรงๆ)
+        chatBox.innerHTML += `<p style="color: #b9f2ff;"><b>AI:</b> กำลังคิดคำตอบให้เจ้าของแอปสุดหล่อ...</p>`;
+        
+        document.getElementById('userInput').value = '';
+    }
+</script>
+
+</body>
+</html>
