@@ -3,142 +3,213 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xiaomi AI - Neural Interface</title>
+    <title>Xiaomi AI - Neural Interface V2</title>
     <style>
-        /* =========================================
-           1. CSS VARIABLES & THEME (XIAOMI ORANGE/BLACK)
-        ========================================= */
+        /* ==========================================================================
+           [1] DESIGN SYSTEM & THEME VARIABLES (XIAOMI ULTRA AESTHETICS)
+           ========================================================================== */
         :root {
-            --bg-base: #0a0a0a;
-            --bg-panel: #141414;
-            --bg-input: #1f1f1f;
-            --primary-orange: #ff6900;
-            --primary-hover: #e05d00;
-            --text-main: #f0f0f0;
-            --text-muted: #888888;
-            --border-color: #2a2a2a;
-            --user-bubble: #252525;
-            --ai-bubble: #ff6900;
-            --shadow-glow: rgba(255, 105, 0, 0.15);
-            --font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            /* Color Palette */
+            --bg-absolute: #000000;
+            --bg-base: #0f0f0f;
+            --bg-panel: #161616;
+            --bg-input: #1a1a1a;
+            --bg-hover: #222222;
+            
+            --brand-primary: #ff6900;
+            --brand-glow: rgba(255, 105, 0, 0.25);
+            --brand-active: #e05d00;
+            
+            --text-high: #ffffff;
+            --text-medium: #b3b3b3;
+            --text-low: #666666;
+            
+            --border-light: #2a2a2a;
+            --border-focus: #404040;
+
+            /* AI & User Bubble Colors */
+            --bubble-user: #262626;
+            --bubble-ai: #ff6900;
+
+            /* Typography */
+            --font-mono: 'Fira Code', 'Courier New', Courier, monospace;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            
+            /* Animation Metrics */
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* =========================================
-           2. RESET & BASE STYLES
-        ========================================= */
+        /* ==========================================================================
+           [2] GLOBAL RESETS & TYPOGRAPHY
+           ========================================================================== */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-        body {
-            font-family: var(--font-family);
-            background-color: var(--bg-base);
-            color: var(--text-main);
+        html, body {
             height: 100vh;
-            display: flex;
+            width: 100vw;
             overflow: hidden;
+            background-color: var(--bg-absolute);
+            color: var(--text-high);
+            font-family: var(--font-sans);
+            font-size: 16px;
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Custom Scrollbar */
+        /* High-Performance Custom Scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
+            height: 8px;
         }
         ::-webkit-scrollbar-track {
             background: transparent;
         }
         ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 10px;
+            background: var(--border-light);
+            border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: var(--primary-orange);
+            background: var(--brand-primary);
         }
 
-        /* =========================================
-           3. LAYOUT: SIDEBAR
-        ========================================= */
+        /* ==========================================================================
+           [3] APP LAYOUT ARCHITECTURE (CSS GRID & FLEXBOX)
+           ========================================================================== */
+        #app-root {
+            display: flex;
+            height: 100%;
+            width: 100%;
+        }
+
+        /* --- SIDEBAR COMPONENT --- */
         .sidebar {
-            width: 280px;
+            width: 300px;
             background-color: var(--bg-panel);
-            border-right: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-light);
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s ease;
+            z-index: 100;
+            transition: transform var(--transition-smooth);
         }
 
-        .brand {
-            padding: 24px 20px;
-            font-size: 1.4rem;
+        .brand-header {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .brand-logo {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--brand-primary), #ff8c33);
+            border-radius: 6px;
+            box-shadow: 0 0 15px var(--brand-glow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-weight: 900;
+            font-size: 14px;
+        }
+
+        .brand-title {
             font-weight: 700;
-            letter-spacing: 1px;
-            color: var(--primary-orange);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid var(--border-color);
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            color: var(--text-high);
         }
 
-        .brand-icon {
-            width: 24px;
-            height: 24px;
-            background: var(--primary-orange);
+        .brand-badge {
+            background: var(--brand-glow);
+            color: var(--brand-primary);
+            padding: 2px 6px;
             border-radius: 4px;
-            display: inline-block;
+            font-size: 0.65rem;
+            font-weight: 700;
+            margin-left: auto;
         }
 
-        .new-chat-btn {
-            margin: 20px;
-            padding: 12px;
+        .nav-actions {
+            padding: 16px;
+        }
+
+        .btn-new-chat {
+            width: 100%;
+            padding: 14px;
             background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
+            border: 1px solid var(--border-light);
             border-radius: 8px;
-            cursor: pointer;
+            color: var(--text-high);
+            font-family: inherit;
             font-size: 0.95rem;
-            transition: all 0.2s ease;
-            text-align: left;
+            font-weight: 500;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 8px;
+            transition: all var(--transition-fast);
         }
 
-        .new-chat-btn:hover {
-            background-color: var(--bg-input);
-            border-color: var(--primary-orange);
-            color: var(--primary-orange);
+        .btn-new-chat:hover {
+            border-color: var(--brand-primary);
+            background-color: rgba(255, 105, 0, 0.05);
+            color: var(--brand-primary);
+            transform: translateY(-1px);
         }
 
-        .history-list {
+        .chat-history-container {
             flex: 1;
             overflow-y: auto;
-            padding: 0 10px;
+            padding: 0 16px 16px 16px;
+        }
+
+        .history-label {
+            font-size: 0.75rem;
+            color: var(--text-low);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            padding-left: 4px;
         }
 
         .history-item {
             padding: 12px;
-            margin-bottom: 5px;
-            border-radius: 6px;
+            margin-bottom: 4px;
+            border-radius: 8px;
             cursor: pointer;
-            color: var(--text-muted);
+            color: var(--text-medium);
             font-size: 0.9rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            transition: background 0.2s;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .history-item:hover {
-            background-color: var(--bg-input);
-            color: var(--text-main);
+            background-color: var(--bg-hover);
+            color: var(--text-high);
         }
 
-        /* =========================================
-           4. LAYOUT: MAIN CHAT AREA
-        ========================================= */
-        .main-chat {
+        .history-item.active {
+            background-color: var(--bg-input);
+            color: var(--brand-primary);
+            font-weight: 500;
+            border-left: 3px solid var(--brand-primary);
+        }
+
+        /* --- MAIN WORKSPACE --- */
+        .workspace {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -146,434 +217,729 @@
             position: relative;
         }
 
-        .chat-container {
+        /* Top Navigation (Mobile Info) */
+        .top-nav {
+            height: 60px;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            background-color: var(--bg-panel);
+            color: var(--text-medium);
+            font-size: 0.9rem;
+            justify-content: center;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #22c55e;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 10px rgba(34, 197, 94, 0.5);
+        }
+
+        /* Chat Output Area */
+        .chat-viewport {
             flex: 1;
             overflow-y: auto;
             padding: 40px 20px;
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 32px;
             scroll-behavior: smooth;
         }
 
-        /* Message Bubbles */
-        .message-row {
+        .message-wrapper {
             display: flex;
             width: 100%;
-            max-width: 850px;
+            max-width: 900px;
             margin: 0 auto;
+            opacity: 0;
+            animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        .message-row.user {
-            justify-content: flex-end;
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        .message-row.ai {
-            justify-content: flex-start;
+        .message-wrapper.user-mode { justify-content: flex-end; }
+        .message-wrapper.ai-mode { justify-content: flex-start; }
+
+        .chat-bubble {
+            max-width: 85%;
+            padding: 18px 24px;
+            border-radius: 16px;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            position: relative;
         }
 
-        .bubble {
-            max-width: 80%;
-            padding: 16px 20px;
-            border-radius: 12px;
-            font-size: 1rem;
-            animation: fadeIn 0.3s ease-out forwards;
-            word-wrap: break-word;
+        /* User Bubble Styling */
+        .chat-bubble.user {
+            background-color: var(--bubble-user);
+            color: var(--text-high);
+            border: 1px solid var(--border-light);
+            border-bottom-right-radius: 4px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* AI Bubble Styling */
+        .chat-bubble.ai {
+            background-color: transparent;
+            color: var(--text-high);
+            width: 100%;
         }
 
-        .bubble.user-bubble {
-            background-color: var(--user-bubble);
-            border: 1px solid var(--border-color);
-            border-bottom-right-radius: 2px;
+        .ai-avatar {
+            width: 32px;
+            height: 32px;
+            background: var(--brand-primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            left: -45px;
+            top: 0;
+            box-shadow: 0 2px 10px var(--brand-glow);
         }
 
-        .bubble.ai-bubble {
-            background-color: var(--ai-bubble);
-            color: #000; /* High contrast text on orange */
-            font-weight: 500;
-            border-bottom-left-radius: 2px;
-            box-shadow: 0 4px 20px var(--shadow-glow);
-        }
-
-        /* Markdown Styles inside AI Bubble */
-        .ai-bubble pre {
-            background: #000;
-            color: var(--text-main);
-            padding: 12px;
-            border-radius: 6px;
-            overflow-x: auto;
-            margin: 10px 0;
-            font-family: monospace;
-            font-size: 0.9rem;
+        /* Advanced Markdown Styling inside AI */
+        .markdown-body p { margin-bottom: 1em; }
+        .markdown-body p:last-child { margin-bottom: 0; }
+        
+        .markdown-body strong { 
+            color: var(--brand-primary); 
+            font-weight: 600;
         }
         
-        .ai-bubble code {
-            font-family: monospace;
-            background: rgba(0,0,0,0.1);
-            padding: 2px 4px;
-            border-radius: 4px;
+        .markdown-body ul, .markdown-body ol {
+            margin-bottom: 1em;
+            padding-left: 2em;
+        }
+        
+        .markdown-body li { margin-bottom: 0.5em; }
+
+        /* Code Block Architecture */
+        .code-block-wrapper {
+            background: #000;
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            margin: 16px 0;
+            overflow: hidden;
         }
 
-        /* =========================================
-           5. INPUT AREA
-        ========================================= */
-        .input-container {
+        .code-header {
+            background: var(--bg-panel);
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            color: var(--text-medium);
+            border-bottom: 1px solid var(--border-light);
+            font-family: var(--font-sans);
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid var(--border-focus);
+            color: var(--text-medium);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+        }
+
+        .copy-btn:hover {
+            color: var(--brand-primary);
+            border-color: var(--brand-primary);
+        }
+
+        .markdown-body pre {
+            padding: 16px;
+            overflow-x: auto;
+        }
+
+        .markdown-body code {
+            font-family: var(--font-mono);
+            font-size: 0.9em;
+            color: #e6e6e6;
+        }
+
+        /* Inline Code */
+        .markdown-body p code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--brand-primary);
+            font-size: 0.85em;
+        }
+
+        /* Error Message State */
+        .chat-bubble.error {
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #ef4444;
+        }
+
+        /* --- INPUT ENGINE --- */
+        .input-dock {
             padding: 20px 40px 40px 40px;
-            background: linear-gradient(180deg, transparent, var(--bg-base) 20%);
+            background: linear-gradient(0deg, var(--bg-base) 60%, transparent);
             display: flex;
             justify-content: center;
+            position: relative;
         }
 
-        .input-wrapper {
+        .input-core {
             width: 100%;
-            max-width: 850px;
+            max-width: 900px;
             position: relative;
             background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5);
-            transition: border-color 0.3s;
+            border: 1px solid var(--border-focus);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: border-color var(--transition-smooth), box-shadow var(--transition-smooth);
+            display: flex;
+            align-items: flex-end;
+            padding: 8px;
         }
 
-        .input-wrapper:focus-within {
-            border-color: var(--primary-orange);
+        .input-core:focus-within {
+            border-color: var(--brand-primary);
+            box-shadow: 0 10px 40px var(--brand-glow);
         }
 
-        textarea {
-            width: 100%;
+        .textarea-engine {
+            flex: 1;
             background: transparent;
             border: none;
-            color: var(--text-main);
-            padding: 18px 60px 18px 20px;
-            font-size: 1rem;
-            font-family: var(--font-family);
+            color: var(--text-high);
+            padding: 12px 16px;
+            font-size: 1.05rem;
+            font-family: var(--font-sans);
             resize: none;
             outline: none;
-            max-height: 200px;
+            max-height: 250px;
             overflow-y: auto;
-            display: block;
+            line-height: 1.5;
         }
 
-        textarea::placeholder {
-            color: var(--text-muted);
+        .textarea-engine::placeholder {
+            color: var(--text-low);
         }
 
-        .send-btn {
-            position: absolute;
-            right: 12px;
-            bottom: 12px;
-            width: 36px;
-            height: 36px;
-            background-color: var(--primary-orange);
+        .btn-execute {
+            width: 44px;
+            height: 44px;
+            background-color: var(--brand-primary);
             border: none;
-            border-radius: 10px;
+            border-radius: 14px;
             color: #000;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: all var(--transition-fast);
+            margin-left: 8px;
+            flex-shrink: 0;
         }
 
-        .send-btn:hover {
-            background-color: var(--primary-hover);
+        .btn-execute:hover:not(:disabled) {
+            background-color: var(--brand-active);
             transform: scale(1.05);
         }
 
-        .send-btn:disabled {
-            background-color: var(--border-color);
-            color: var(--text-muted);
+        .btn-execute:disabled {
+            background-color: var(--bg-hover);
+            color: var(--text-low);
             cursor: not-allowed;
-            transform: none;
         }
 
-        /* Typing Indicator */
-        .typing-indicator {
-            display: none;
-            gap: 4px;
-            padding: 10px 16px;
-            background: transparent;
-        }
-        .dot {
-            width: 6px;
-            height: 6px;
-            background-color: #000;
-            border-radius: 50%;
-            animation: bounce 1.4s infinite ease-in-out both;
-        }
-        .dot:nth-child(1) { animation-delay: -0.32s; }
-        .dot:nth-child(2) { animation-delay: -0.16s; }
-        
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
+        /* Loading / Streaming Indicator */
+        .cursor-blink {
+            display: inline-block;
+            width: 8px;
+            height: 18px;
+            background-color: var(--brand-primary);
+            animation: blink 1s step-end infinite;
+            vertical-align: middle;
+            margin-left: 4px;
         }
 
-        /* Responsive */
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Responsive Design */
         @media (max-width: 768px) {
             .sidebar {
                 position: absolute;
-                z-index: 10;
                 height: 100%;
                 transform: translateX(-100%);
+                box-shadow: 20px 0 50px rgba(0,0,0,0.5);
             }
-            .sidebar.active {
+            .sidebar.open {
                 transform: translateX(0);
             }
-            .input-container {
-                padding: 10px 20px 20px 20px;
+            .input-dock {
+                padding: 10px 16px 20px 16px;
+            }
+            .chat-viewport {
+                padding: 20px 16px;
+            }
+            .ai-avatar {
+                display: none; /* Hide avatar on mobile to save space */
+            }
+            .chat-bubble.ai {
+                padding-left: 0;
             }
         }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div class="brand">
-            <span class="brand-icon"></span>
-            XIAOMI AI
-        </div>
-        <button class="new-chat-btn" onclick="UI.startNewChat()">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            New Session
-        </button>
-        <div class="history-list" id="historyList">
+    <div id="app-root">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand-header">
+                <div class="brand-logo">X</div>
+                <div class="brand-title">Xiaomi AI</div>
+                <div class="brand-badge">PRO</div>
             </div>
-    </aside>
-
-    <main class="main-chat">
-        <div class="chat-container" id="chatContainer">
-            <div class="message-row ai">
-                <div class="bubble ai-bubble">
-                    ระบบพร้อมใช้งาน ฉันคือ Xiaomi AI. มีอะไรให้ฉันช่วยประมวลผลหรือไม่?
-                </div>
-            </div>
-        </div>
-
-        <div class="input-container">
-            <div class="input-wrapper">
-                <textarea 
-                    id="userInput" 
-                    rows="1" 
-                    placeholder="ป้อนคำสั่งที่นี่..." 
-                    oninput="UI.autoResize(this)"
-                    onkeydown="UI.handleEnter(event)"></textarea>
-                <button id="sendBtn" class="send-btn" onclick="App.handleSend()">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            
+            <div class="nav-actions">
+                <button class="btn-new-chat" id="newSessionBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    Initialize New Array
                 </button>
             </div>
-        </div>
-    </main>
+
+            <div class="history-label">Memory Core (Local)</div>
+            <div class="chat-history-container" id="historyList">
+                </div>
+        </aside>
+
+        <main class="workspace">
+            <div class="top-nav">
+                <div class="status-dot"></div>
+                Neural Network Connected via gemini-1.5-flash
+            </div>
+
+            <div class="chat-viewport" id="chatViewport">
+                </div>
+
+            <div class="input-dock">
+                <div class="input-core">
+                    <textarea 
+                        id="promptInput" 
+                        class="textarea-engine"
+                        rows="1" 
+                        placeholder="ป้อนคำสั่งเพื่อเริ่มการประมวลผลเชิงลึก..."></textarea>
+                    <button id="executeBtn" class="btn-execute" disabled>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
 
     <script>
         /**
-         * ==================================================================
-         * CONFIGURATION & CONSTANTS
-         * ==================================================================
+         * [SYSTEM CONFIGURATION]
+         * อัปเกรดจาก gemini-pro เป็น gemini-1.5-flash เพื่อแก้ปัญหา Timeout และเพิ่มความเร็ว
          */
         const CONFIG = {
-            // ระบบถูกออกแบบมาให้รองรับ API แบบ Google Gemini Structure
-            API_KEY: "AIzaSyBks9C41uSPKClL2Np-KGb9vNjIeOz60i8", 
-            API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent"
+            API_KEY: "AIzaSyBks9C41uSPKClL2Np-KGb9vNjIeOz60i8",
+            // ใช้ Stream API เพื่อโหลดข้อมูลทีละส่วน (SSE)
+            API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:streamGenerateContent?alt=sse"
         };
 
         /**
-         * ==================================================================
-         * UTILITY: LIGHTWEIGHT MARKDOWN PARSER
-         * แปลงข้อความดิบให้เป็น HTML Structure โดยไม่พึ่งไลบรารี
-         * ==================================================================
+         * [MODULE 1: STATE & MEMORY MANAGEMENT]
+         * จัดการ LocalStorage เพื่อไม่ให้แชทหายเมื่อรีเฟรช
          */
-        const Parser = {
-            parseMarkdown(text) {
-                if (!text) return "";
-                let html = text
-                    // Parse Code Blocks (```code```)
-                    .replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>')
-                    // Parse Inline Code (`code`)
+        const MemorySystem = {
+            sessions: [],
+            currentSessionId: null,
+
+            init() {
+                const stored = localStorage.getItem('xiaomi_ai_memory');
+                if (stored) {
+                    this.sessions = JSON.parse(stored);
+                }
+                if (this.sessions.length === 0) {
+                    this.createNewSession();
+                } else {
+                    this.currentSessionId = this.sessions[0].id;
+                }
+            },
+
+            createNewSession() {
+                const newId = 'session_' + Date.now();
+                this.sessions.unshift({
+                    id: newId,
+                    title: 'New Neural Array',
+                    messages: [],
+                    timestamp: Date.now()
+                });
+                this.currentSessionId = newId;
+                this.save();
+                return newId;
+            },
+
+            addMessage(role, content) {
+                const session = this.sessions.find(s => s.id === this.currentSessionId);
+                if (session) {
+                    // Update title if it's the first user message
+                    if (session.messages.length === 0 && role === 'user') {
+                        session.title = content.substring(0, 30) + '...';
+                    }
+                    session.messages.push({ role, content });
+                    this.save();
+                }
+            },
+
+            updateLastAIMessage(content) {
+                const session = this.sessions.find(s => s.id === this.currentSessionId);
+                if (session && session.messages.length > 0) {
+                    const lastMsg = session.messages[session.messages.length - 1];
+                    if (lastMsg.role === 'ai') {
+                        lastMsg.content = content;
+                        this.save();
+                    }
+                }
+            },
+
+            getCurrentMessages() {
+                const session = this.sessions.find(s => s.id === this.currentSessionId);
+                return session ? session.messages : [];
+            },
+
+            save() {
+                localStorage.setItem('xiaomi_ai_memory', JSON.stringify(this.sessions));
+            }
+        };
+
+        /**
+         * [MODULE 2: ADVANCED MARKDOWN ENGINE]
+         * Parser ที่เขียนขึ้นเองเพื่อความเร็วสุดขีด รองรับ Code Block แบบสมบูรณ์
+         */
+        const RenderEngine = {
+            parse(rawText) {
+                if (!rawText) return '';
+                
+                let html = rawText
+                    // 1. Code Blocks (```lang ... ```)
+                    .replace(/```([\w]*)\n([\s\S]*?)```/g, (match, lang, code) => {
+                        const languageId = lang || 'text';
+                        // Escape HTML in code
+                        const safeCode = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                        return `
+                            <div class="code-block-wrapper">
+                                <div class="code-header">
+                                    <span>${languageId.toUpperCase()}</span>
+                                    <button class="copy-btn" onclick="UI.copyToClipboard(this)">Copy Code</button>
+                                </div>
+                                <pre><code>${safeCode}</code></pre>
+                            </div>
+                        `;
+                    })
+                    // 2. Inline Code (`code`)
                     .replace(/`([^`]+)`/g, '<code>$1</code>')
-                    // Parse Bold (**text**)
+                    // 3. Bold (**text**)
                     .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
-                    // Parse Italic (*text*)
+                    // 4. Italic (*text*)
                     .replace(/\*([^*]+)\*/g, '<em>$1</em>')
-                    // Line Breaks
-                    .replace(/\n/g, '<br>');
+                    // 5. Line Breaks to Paragraphs/BR
+                    .split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+
                 return html;
             }
         };
 
         /**
-         * ==================================================================
-         * UI CONTROLLER
-         * จัดการ DOM, Animation, และ Interaction อย่างเต็มประสิทธิภาพ
-         * ==================================================================
+         * [MODULE 3: USER INTERFACE CONTROLLER]
+         * จัดการ DOM แบบ Real-time
          */
         const UI = {
-            elements: {
-                chatContainer: document.getElementById('chatContainer'),
-                userInput: document.getElementById('userInput'),
-                sendBtn: document.getElementById('sendBtn'),
-                historyList: document.getElementById('historyList')
+            nodes: {
+                viewport: document.getElementById('chatViewport'),
+                input: document.getElementById('promptInput'),
+                btn: document.getElementById('executeBtn'),
+                history: document.getElementById('historyList'),
+                newBtn: document.getElementById('newSessionBtn')
             },
 
-            autoResize(textarea) {
-                textarea.style.height = 'auto';
-                textarea.style.height = textarea.scrollHeight + 'px';
-                if (textarea.value.trim() === '') {
-                    textarea.style.height = 'auto'; // Reset when empty
-                }
+            init() {
+                this.bindEvents();
+                this.renderHistoryList();
+                this.loadCurrentSession();
             },
 
-            handleEnter(event) {
-                if (event.key === 'Enter' && !event.shiftKey) {
-                    event.preventDefault();
-                    App.handleSend();
+            bindEvents() {
+                this.nodes.input.addEventListener('input', () => {
+                    // Auto-resize
+                    this.nodes.input.style.height = 'auto';
+                    this.nodes.input.style.height = (this.nodes.input.scrollHeight) + 'px';
+                    // Enable/Disable button
+                    this.nodes.btn.disabled = this.nodes.input.value.trim() === '';
+                });
+
+                this.nodes.input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        if (!this.nodes.btn.disabled) AppCore.processInput();
+                    }
+                });
+
+                this.nodes.btn.addEventListener('click', () => AppCore.processInput());
+                this.nodes.newBtn.addEventListener('click', () => {
+                    MemorySystem.createNewSession();
+                    this.renderHistoryList();
+                    this.loadCurrentSession();
+                });
+            },
+
+            renderHistoryList() {
+                this.nodes.history.innerHTML = '';
+                MemorySystem.sessions.forEach(session => {
+                    const el = document.createElement('div');
+                    el.className = `history-item ${session.id === MemorySystem.currentSessionId ? 'active' : ''}`;
+                    el.innerHTML = `
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                        ${session.title}
+                    `;
+                    el.onclick = () => {
+                        MemorySystem.currentSessionId = session.id;
+                        this.renderHistoryList();
+                        this.loadCurrentSession();
+                    };
+                    this.nodes.history.appendChild(el);
+                });
+            },
+
+            loadCurrentSession() {
+                this.nodes.viewport.innerHTML = '';
+                const messages = MemorySystem.getCurrentMessages();
+                
+                if (messages.length === 0) {
+                    this.renderMessage('ai', 'ระบบสถาปัตยกรรม V2 พร้อมใช้งาน ฉันอัปเกรดเป็น Gemini 1.5 Flash และเชื่อมต่อด้วยระบบ Streaming แล้ว... เชิญป้อนคำสั่ง', false);
+                } else {
+                    messages.forEach(msg => {
+                        this.renderMessage(msg.role, msg.content, false);
+                    });
                 }
+                this.scrollToBottom();
+            },
+
+            renderMessage(role, text, animate = true) {
+                const wrapper = document.createElement('div');
+                wrapper.className = `message-wrapper ${role}-mode`;
+                if (!animate) wrapper.style.animation = 'none'; // ปิด animation ตอนโหลดประวัติ
+
+                let innerHTML = '';
+                if (role === 'ai') {
+                    innerHTML = `
+                        <div class="chat-bubble ai markdown-body">
+                            <div class="ai-avatar">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                            </div>
+                            <div class="content-stream">${RenderEngine.parse(text)}</div>
+                        </div>
+                    `;
+                } else {
+                    innerHTML = `<div class="chat-bubble user">${text.replace(/\n/g, '<br>')}</div>`;
+                }
+
+                wrapper.innerHTML = innerHTML;
+                this.nodes.viewport.appendChild(wrapper);
+                this.scrollToBottom();
+                return wrapper;
+            },
+
+            createStreamingBubble() {
+                const wrapper = document.createElement('div');
+                wrapper.className = `message-wrapper ai-mode`;
+                wrapper.innerHTML = `
+                    <div class="chat-bubble ai markdown-body">
+                        <div class="ai-avatar">X</div>
+                        <div class="content-stream"><span class="cursor-blink"></span></div>
+                    </div>
+                `;
+                this.nodes.viewport.appendChild(wrapper);
+                this.scrollToBottom();
+                return wrapper.querySelector('.content-stream');
+            },
+
+            updateStreamBubble(element, markdownText) {
+                element.innerHTML = RenderEngine.parse(markdownText) + '<span class="cursor-blink"></span>';
+                this.scrollToBottom();
+            },
+
+            finalizeStreamBubble(element, markdownText) {
+                element.innerHTML = RenderEngine.parse(markdownText);
+                this.scrollToBottom();
+            },
+
+            renderError(errorMsg) {
+                const wrapper = document.createElement('div');
+                wrapper.className = `message-wrapper ai-mode`;
+                wrapper.innerHTML = `
+                    <div class="chat-bubble error">
+                        <strong>[System Error]:</strong> ${errorMsg}
+                    </div>
+                `;
+                this.nodes.viewport.appendChild(wrapper);
+                this.scrollToBottom();
             },
 
             scrollToBottom() {
-                this.elements.chatContainer.scrollTop = this.elements.chatContainer.scrollHeight;
+                this.nodes.viewport.scrollTop = this.nodes.viewport.scrollHeight;
             },
 
-            appendMessage(sender, text, isMarkdown = false) {
-                const row = document.createElement('div');
-                row.className = `message-row ${sender}`;
-                
-                const bubble = document.createElement('div');
-                bubble.className = `bubble ${sender}-bubble`;
-                
-                if (isMarkdown && sender === 'ai') {
-                    bubble.innerHTML = Parser.parseMarkdown(text);
+            setProcessingState(isProcessing) {
+                this.nodes.input.disabled = isProcessing;
+                this.nodes.btn.disabled = isProcessing;
+                if (isProcessing) {
+                    this.nodes.btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="spin"><circle cx="12" cy="12" r="10"></circle><path d="M12 2v4"></path></svg>`;
+                    // Add simple CSS animation for spin dynamically
+                    if (!document.getElementById('spin-style')) {
+                        const style = document.createElement('style');
+                        style.id = 'spin-style';
+                        style.innerHTML = `@keyframes spin { 100% { transform: rotate(360deg); } } .spin { animation: spin 1s linear infinite; opacity: 0.5; }`;
+                        document.head.appendChild(style);
+                    }
                 } else {
-                    bubble.textContent = text;
+                    this.nodes.btn.innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>`;
+                    this.nodes.input.focus();
                 }
-
-                row.appendChild(bubble);
-                this.elements.chatContainer.appendChild(row);
-                this.scrollToBottom();
-                return bubble; // Return element for updating later if streaming
             },
 
-            showTyping() {
-                const row = document.createElement('div');
-                row.className = 'message-row ai';
-                row.id = 'typingIndicator';
-                row.innerHTML = `
-                    <div class="bubble ai-bubble typing-indicator" style="display:flex;">
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                        <div class="dot"></div>
-                    </div>
-                `;
-                this.elements.chatContainer.appendChild(row);
-                this.scrollToBottom();
-            },
-
-            hideTyping() {
-                const indicator = document.getElementById('typingIndicator');
-                if (indicator) indicator.remove();
-            },
-
-            disableInput() {
-                this.elements.userInput.disabled = true;
-                this.elements.sendBtn.disabled = true;
-            },
-
-            enableInput() {
-                this.elements.userInput.disabled = false;
-                this.elements.sendBtn.disabled = false;
-                this.elements.userInput.value = '';
-                this.autoResize(this.elements.userInput);
-                this.elements.userInput.focus();
-            },
-
-            startNewChat() {
-                this.elements.chatContainer.innerHTML = `
-                    <div class="message-row ai">
-                        <div class="bubble ai-bubble">
-                            เซสชั่นใหม่เริ่มต้นขึ้นแล้ว มีอะไรให้ฉันประมวลผล?
-                        </div>
-                    </div>
-                `;
+            copyToClipboard(btn) {
+                const codeNode = btn.parentElement.nextElementSibling.querySelector('code');
+                navigator.clipboard.writeText(codeNode.textContent).then(() => {
+                    const originalText = btn.innerText;
+                    btn.innerText = 'Copied!';
+                    btn.style.borderColor = 'var(--brand-primary)';
+                    btn.style.color = 'var(--brand-primary)';
+                    setTimeout(() => {
+                        btn.innerText = originalText;
+                        btn.style.borderColor = '';
+                        btn.style.color = '';
+                    }, 2000);
+                });
             }
         };
 
         /**
-         * ==================================================================
-         * APPLICATION LOGIC (THE BRAIN)
-         * จัดการ Fetch API และ Data Flow
-         * ==================================================================
+         * [MODULE 4: NEURAL NETWORK CONTROLLER (API)]
+         * แกนประมวลผลหลัก ทำหน้าที่คุยกับ Google API ด้วยเทคนิค Server-Sent Events (SSE)
          */
-        const App = {
-            async handleSend() {
-                const inputElement = UI.elements.userInput;
-                const text = inputElement.value.trim();
+        const AppCore = {
+            async processInput() {
+                const prompt = UI.nodes.input.value.trim();
+                if (!prompt) return;
 
-                if (!text) return;
+                // 1. Clear input and setup UI
+                UI.nodes.input.value = '';
+                UI.nodes.input.style.height = 'auto';
+                UI.setProcessingState(true);
 
-                // 1. Render User Message
-                UI.appendMessage('user', text);
-                UI.disableInput();
-                UI.showTyping();
+                // 2. Add User Message
+                UI.renderMessage('user', prompt);
+                MemorySystem.addMessage('user', prompt);
+                
+                // Prepare AI Message in History (will be updated continuously)
+                MemorySystem.addMessage('ai', '');
 
-                // 2. Fetch AI Response
-                try {
-                    const response = await this.callAI(text);
-                    UI.hideTyping();
-                    UI.appendMessage('ai', response, true);
-                } catch (error) {
-                    UI.hideTyping();
-                    UI.appendMessage('ai', `[System Error]: ${error.message}`, false);
-                    console.error(error);
-                } finally {
-                    UI.enableInput();
-                }
-            },
+                // 3. Prepare AI Bubble for Streaming
+                const streamElement = UI.createStreamingBubble();
+                let fullResponse = "";
 
-            async callAI(prompt) {
-                // สร้าง Request Body รูปแบบที่เข้ากับ Gemini/Google API structure
+                // 4. Fetch Strategy: Constructing Payload with History Context
+                // นำประวัติการแชทส่งไปด้วยเพื่อให้ AI จำความเดิมได้
+                const historyContext = MemorySystem.getCurrentMessages().slice(0, -1).map(msg => ({
+                    role: msg.role === 'user' ? 'user' : 'model',
+                    parts: [{ text: msg.content }]
+                }));
+
                 const payload = {
-                    contents: [{
-                        parts: [{
-                            text: prompt
-                        }]
+                    contents: [...historyContext, {
+                        role: "user",
+                        parts: [{ text: prompt }]
                     }]
                 };
 
                 try {
-                    const response = await fetch(`${CONFIG.API_URL}?key=${CONFIG.API_KEY}`, {
+                    const response = await fetch(`${CONFIG.API_URL}&key=${CONFIG.API_KEY}`, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(payload)
                     });
 
                     if (!response.ok) {
-                        throw new Error(`HTTP Error Status: ${response.status}`);
+                        const errData = await response.json();
+                        throw new Error(errData.error?.message || `HTTP Status ${response.status}`);
                     }
 
-                    const data = await response.json();
-                    
-                    // Parse Response Structure
-                    if (data.candidates && data.candidates.length > 0) {
-                        return data.candidates[0].content.parts[0].text;
-                    } else {
-                        return "ประมวลผลล้มเหลว ไม่พบข้อมูลส่งกลับจากเซิร์ฟเวอร์";
+                    // 5. Advanced Streaming Decoder (The "Omakase" Method)
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder("utf-8");
+
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+
+                        // Decode chunk
+                        const chunkText = decoder.decode(value, { stream: true });
+                        
+                        // Parse SSE lines format: "data: {...json...}"
+                        const lines = chunkText.split('\n');
+                        for (const line of lines) {
+                            if (line.startsWith('data: ')) {
+                                const dataStr = line.replace('data: ', '');
+                                try {
+                                    const jsonData = JSON.parse(dataStr);
+                                    if (jsonData.candidates && jsonData.candidates[0].content.parts[0].text) {
+                                        const textPart = jsonData.candidates[0].content.parts[0].text;
+                                        fullResponse += textPart;
+                                        
+                                        // Update UI in real-time
+                                        UI.updateStreamBubble(streamElement, fullResponse);
+                                    }
+                                } catch (e) {
+                                    // Ignore partial JSON parse errors in stream chunks
+                                }
+                            }
+                        }
                     }
+
+                    // 6. Finalize Request
+                    UI.finalizeStreamBubble(streamElement, fullResponse);
+                    MemorySystem.updateLastAIMessage(fullResponse);
+                    UI.renderHistoryList(); // Update sidebar titles
 
                 } catch (error) {
-                    throw new Error("ไม่สามารถเชื่อมต่อกับ Neural Network ได้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ตหรือ API Key");
+                    console.error("Neural Sync Failed:", error);
+                    streamElement.parentElement.remove(); // Remove empty bubble
+                    MemorySystem.sessions[0].messages.pop(); // Remove empty AI memory
+                    
+                    let errorDesc = error.message;
+                    if (errorDesc.includes("400")) errorDesc = "API Key ไม่ถูกต้อง หรือ รูปแบบ Request ผิดพลาด (ตรวจสอบ URL รุ่น AI)";
+                    if (errorDesc.includes("403")) errorDesc = "ถูกบล็อกการเข้าถึง ตรวจสอบสิทธิ์ของ API Key";
+                    
+                    UI.renderError(`${errorDesc} <br><br>คำแนะนำ: ตรวจสอบว่า API Key ที่ใช้ยัง Active อยู่ และเป็น Key ที่สร้างจาก Google AI Studio รุ่นล่าสุด`);
+                } finally {
+                    UI.setProcessingState(false);
                 }
             }
         };
 
-        // Initialize Focus
-        window.onload = () => UI.elements.userInput.focus();
+        // ================= BOOT SEQUENCE =================
+        window.addEventListener('DOMContentLoaded', () => {
+            MemorySystem.init();
+            UI.init();
+        });
 
     </script>
 </body>
